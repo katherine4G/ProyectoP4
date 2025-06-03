@@ -1,10 +1,10 @@
 
 
-const Button = ({ onClick, labelText = "", style = "", disabled = false }) => {
+const Button = ({ onClick, labelText = "", className = "", disabled = false }) => {
   return (
     <button
       onClick={onClick}
-      className={style}
+      className={className}
       disabled={disabled}
     >
       {labelText}

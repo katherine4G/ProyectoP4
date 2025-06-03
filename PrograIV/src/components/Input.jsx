@@ -1,4 +1,4 @@
-const Input = ({type = "text", value, onChange, placeholder = " ", style="", name=""}) =>{
+const Input = ({type = "text", value, onChange, placeholder = " ", className="", name=""}) =>{
     return(
         <input
             type={type}
@@ -6,7 +6,7 @@ const Input = ({type = "text", value, onChange, placeholder = " ", style="", nam
             value={value}
             placeholder={placeholder}
             onChange={onChange}
-            className={style}
+            className={className}
         />
     );
 };

@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Areas_Interes {
+  Id               Int                @id @default(autoincrement())
+  Nombre           String             @db.VarChar(100)
+  Graduado_Interes Graduado_Interes[]
+}
+
+model Carrera {
+  Id                                   Int         @id @default(autoincrement())
+  Area                                 String?     @db.VarChar(100)
+  Nombre                               String      @db.VarChar(100)
+  Graduados_Graduados_CarreraToCarrera Graduados[] @relation("Graduados_CarreraToCarrera")
+}
+
+model Documentos {
+  Id          Int        @id @default(autoincrement())
+  Graduado_Id Int?
+  Tipo        String?    @db.VarChar(50)
+  URL         String?    @db.Text
+  Graduados   Graduados? @relation(fields: [Graduado_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Documentos_ibfk_1")
+
+  @@index([Graduado_Id], map: "Graduado_Id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model Encuestas {
+  Id          Int        @id @default(autoincrement())
+  Taller_Id   Int?
+  Graduado_Id Int?
+  Puntuacion  Int?
+  Comentario  String?    @db.Text
+  Talleres    Talleres?  @relation(fields: [Taller_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Encuestas_ibfk_1")
+  Graduados   Graduados? @relation(fields: [Graduado_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Encuestas_ibfk_2")
+
+  @@index([Graduado_Id], map: "Graduado_Id")
+  @@index([Taller_Id], map: "Taller_Id")
+}
+
+model Exponente {
+  Id                 Int        @id @default(autoincrement())
+  Nombre             String     @db.VarChar(100)
+  Direccion          String?    @db.VarChar(200)
+  Correo_Electronico String?    @db.VarChar(100)
+  Telefono           String?    @db.VarChar(20)
+  Telefono_Trabajo   String?    @db.VarChar(20)
+  Especialidad       String?    @db.VarChar(100)
+  Talleres           Talleres[]
+}
+
+model Graduado_Interes {
+  Graduado_Id   Int
+  Area_Id       Int
+  Graduados     Graduados     @relation(fields: [Graduado_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Graduado_Interes_ibfk_1")
+  Areas_Interes Areas_Interes @relation(fields: [Area_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Graduado_Interes_ibfk_2")
+
+  @@id([Graduado_Id, Area_Id])
+  @@index([Area_Id], map: "Area_Id")
+}
+
+model Graduados {
+  Id                                 Int                @id @default(autoincrement())
+  Nombre                             String             @db.VarChar(100)
+  Cedula                             String             @unique(map: "Cedula") @db.VarChar(20)
+  Direccion                          String?            @db.VarChar(200)
+  Correo_Electronico                 String?            @db.VarChar(100)
+  Telefono                           String?            @db.VarChar(20)
+  Telefono_Trabajo                   String?            @db.VarChar(20)
+  Anio_Egreso                        Int?               @db.Year
+  Carrera                            Int?
+  Categoria                          String?            @db.VarChar(100)
+  Zona_Geografica                    String?            @db.VarChar(100)
+  Documentos                         Documentos[]
+  Encuestas                          Encuestas[]
+  Graduado_Interes                   Graduado_Interes[]
+  Carrera_Graduados_CarreraToCarrera Carrera?           @relation("Graduados_CarreraToCarrera", fields: [Carrera], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Graduados_ibfk_1")
+  Taller_Graduado                    Taller_Graduado[]
+
+  @@index([Carrera], map: "Carrera")
+}
+
+model Roles {
+  Id      Int       @id @default(autoincrement())
+  Nombre  String    @db.VarChar(100)
+  Usuario Usuario[]
+}
+
+model Taller_Graduado {
+  Taller_Id           Int
+  Graduado_Id         Int
+  Asistencia          Boolean?  @default(false)
+  Certificado_Emitido Boolean?  @default(false)
+  Talleres            Talleres  @relation(fields: [Taller_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Taller_Graduado_ibfk_1")
+  Graduados           Graduados @relation(fields: [Graduado_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Taller_Graduado_ibfk_2")
+
+  @@id([Taller_Id, Graduado_Id])
+  @@index([Graduado_Id], map: "Graduado_Id")
+}
+
+model Talleres {
+  Id              Int               @id @default(autoincrement())
+  Nombre          String            @db.VarChar(100)
+  Descripcion     String?           @db.Text
+  Requisitos      String?           @db.Text
+  Fecha           DateTime?         @db.Date
+  Hora            DateTime?         @db.Time(0)
+  Cupo_Maximo     Int?
+  Categoria       String?           @db.VarChar(100)
+  Modalidad       String?           @db.VarChar(50)
+  Facilitador_Id  Int?
+  Encuestas       Encuestas[]
+  Taller_Graduado Taller_Graduado[]
+  Exponente       Exponente?        @relation(fields: [Facilitador_Id], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Talleres_ibfk_1")
+
+  @@index([Facilitador_Id], map: "Facilitador_Id")
+}
+
+model Usuario {
+  Id         Int    @id @default(autoincrement())
+  Nombre     String @db.VarChar(100)
+  Contrasena String @db.VarChar(255)
+  Rol        Int?
+  Roles      Roles? @relation(fields: [Rol], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Usuario_ibfk_1")
+
+  @@index([Rol], map: "Rol")
+}

@@ -18,26 +18,18 @@ const LoginPage = () => {
     alert("Redirigir a página de registro (aún no implementado)");
   };
 
-  // 🎨 Estilos
-const containerStyle = "min-h-screen flex items-center justify-center bg-[#283a65]";
-const boxStyle = "flex flex-col bg-[#1e3264] mt-16 p-10 pb-6 rounded-2xl w-full max-w-sm space-y-5 shadow-lg";
-
-
-const headingStyle = "text-center text-2xl font-bold text-white mb-2";
-const inputStyle = "w-[250px] mx-auto py-3 px-4 rounded-xl bg-[#6b74a8] text-white placeholder-[#ffffff] placeholder-opacity-100 text-center font-semibold focus:outline-none focus:ring-2 focus:ring-white";
-const buttonStyle = "block mx-auto w-full max-w-xs py-3 rounded-xl bg-[#f4cba0] text-black font-semibold hover:bg-[#eebf92] transition";
-const buttonSecondary = "w-full py-3 rounded-xl bg-[#f4cba0] text-black font-semibold hover:bg-[#eebf92] transition";
-
   return (
-    <div className={containerStyle}>
-      <div className={boxStyle}>
+    <div className="min-h-screen flex items-center justify-center bg-[#214084]">
+      <div className="w-[320px] h-[320px] bg-[#527fe1] rounded-2xl flex flex-col justify-center gap-4 p-6">
+        <h1 className="text-center text-white text-xl font-bold">¡Bienvenido!</h1>
+
         <Input
           type="text"
           value={idUser}
           onChange={(e) => setIdUser(e.target.value)}
           name="idUser"
           placeholder="Iniciar sesión"
-          style={inputStyle}
+          className="w-[300px] mx-auto py-3 px-4 rounded bg-[#396ad6] text-black text-center font-semibold outline-none border-none"
         />
 
         <Input
@@ -46,19 +38,19 @@ const buttonSecondary = "w-full py-3 rounded-xl bg-[#f4cba0] text-black font-sem
           onChange={(e) => setPassword(e.target.value)}
           name="password"
           placeholder="Contraseña"
-          style={inputStyle}
+          className="w-[300px] mx-auto py-3 px-4 rounded bg-[#396ad6] text-black text-center font-semibold outline-none border-none"
         />
 
         <Button
           onClick={loginLogic}
           labelText="Iniciar sesión"
-          style={buttonStyle}
+          className="block mx-auto w-[300px] py-3 rounded-xl bg-[#f4cba0] text-black font-semibold hover:bg-[#eabf96] transition-colors"
         />
 
         <Button
           onClick={handleRegister}
           labelText="Registrarme"
-          style={buttonSecondary}
+          className="block mx-auto w-[300px] py-3 rounded-xl bg-[#f4cba0] text-black font-semibold hover:bg-[#eabf96] transition-colors"
         />
       </div>
     </div>
